@@ -1,0 +1,35 @@
+#!/usr/bin/with-contenv bash
+
+# install
+apk -U add \
+  flac \
+  sox \
+  lame \
+  make \
+  g++
+
+# install mktorrent
+[[ ! -d "/opt/mktorrent/.git" ]] && \
+    git clone https://github.com/Rudde/mktorrent.git /opt/mktorrent && \
+    cd /opt/mktorrent && \
+    make && \
+    make install
+
+# install nwbetter
+[[ ! -d "/opt/nwbetter/.git" ]] && \
+  git clone https://github.com/defmulti/nwbetter /opt/nwbetter && \
+  cd /opt/nwbetter && \
+  pip install -r /opt/nwbetter/requirements.txt
+
+# make directories
+mkdir -p /root/.nwbetter
+
+# copy env vars to config
+echo "[notwhat]
+username = $NWB_USERNAME
+password = $NWB_PASSWORD
+data_dir = $NWB_DATA_DIR
+output_dir = $NWB_OUTPUT_DIR
+torrent_dir = $NWB_TORRENT_DIR
+formats = $NWB_FORMATS
+media = $NWB_MEDIA" > /root/.nwbetter/config
